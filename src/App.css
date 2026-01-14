@@ -2,20 +2,34 @@
 
 @keyframes fall {
   0% {
-    transform: translateY(-10%) rotate(0deg);
-    opacity: 1;
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(25vh) translateX(10px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(50vh) translateX(-10px) rotate(180deg);
+    opacity: 0.75;
+  }
+  75% {
+    transform: translateY(75vh) translateX(10px) rotate(270deg);
   }
   100% {
-    transform: translateY(110vh) rotate(360deg);
-    opacity: 0.3;
+    transform: translateY(110vh) translateX(0) rotate(360deg);
+    opacity: 0.7;
   }
 }
+
 .leaf {
   position: absolute;
-  top: -10%;
+  top: -10vh;
   animation-name: fall;
   animation-duration: 8s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  
   pointer-events: none; /* so it doesn’t block clicks */
+ /* opacity: 0.1; */
+
 }

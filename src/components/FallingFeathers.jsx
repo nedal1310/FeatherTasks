@@ -12,7 +12,9 @@ function FallingFeathers() {
       delay: Math.random() * 5,            // stagger animation start
       duration: 5 + Math.random() * 10,    // animation speed
       size: 40 + Math.random() * 60,       // size in px (40px → 100px)
-      rotate: Math.random() * 360          // initial rotation
+      rotate: Math.random() * 360,         // initial rotation
+      drift: -30 + Math.random() * 60      // horizontal movement during fall
+
     }));
     setFeathers(generated);
   }, []); // empty dependency → only runs once
@@ -30,8 +32,11 @@ function FallingFeathers() {
             left: `${f.left}vw`,
             height: `${f.size}px`,
             width: "auto",
-            transform: `rotate(${f.rotate}deg)`,
-            animation: `fall ${f.duration}s linear ${f.delay}s infinite`
+           transform: `translateX(${f.drift}px) rotate(${f.rotate}deg)`,
+
+            animation: `fall ${f.duration}s linear ${f.delay}s infinite`,
+            opacity: 0.1,          // subtle visibility
+    pointerEvents: "none"
           }}
         />
       ))}

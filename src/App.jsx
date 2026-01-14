@@ -6,6 +6,8 @@ import logo from "../src/assets/logo.svg";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import FallingFeathers from "./components/FallingFeathers.jsx";
+import { FaAngleUp } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa";
 
 function App() {
   // text
@@ -28,6 +30,21 @@ function App() {
 
   const toggleFinished = (params) => {
     setshowFinished(!showFinished);
+  };
+
+  const moveTodo = (index, direction) => {
+    const newTodos = [...todos];
+    const targetIndex = index + direction;
+
+    if (targetIndex < 0 || targetIndex >= newTodos.length) return;
+
+    [newTodos[index], newTodos[targetIndex]] = [
+      newTodos[targetIndex],
+      newTodos[index],
+    ];
+
+    setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   };
 
   const handleEdit = (e, id) => {
@@ -89,33 +106,34 @@ function App() {
       <Navbar />
       <FallingFeathers />
       {/* main container for to do app */}
-      <div className="relative z-10  bg-stone-300   rounded-2xl    p-5 my-5  md:max-w-[60vw] md:mx-auto w-full min-h-[80vh]">
+      <div className="relative z-10 opacity-90 bg-stone-300   rounded-2xl    p-5 my-5  md:max-w-[60vw] md:mx-auto w-full min-h-[80vh]">
         <div className="flex flex-row justify-center items-center p-2 gap-2">
           <img src={logo} alt="logo" className="h-13 w-auto " />
-          <h1 className="text-3xl text-stone-700 font-extrabold font-serif">
+          <h1 className="md:text-2xl text-xl text-stone-700 font-bold font-serif">
             FeatherTasks
           </h1>
         </div>
-        <div className="addTodo gap-3 ">
-          <h2 className="text-xl  p-2 text-stone-700 font-extrabold font-serif">
+        <div className="addTodo   ">
+          <h2 className="md:text-xl   p-2 text-stone-700 font-bold font-serif">
             Add a Todo
           </h2>
           {/* add todo section */}
-
-          <input
-            onChange={handleChange}
-            value={todo}
-            className="bg-white rounded-2xl  md:min-w-[45vw] p-1.5 "
-            type="text"
-            placeholder="Write your task here..."
-          />
-          <button
-            onClick={handleAdd}
-            disabled={todo.length <= 3}
-            className="cursor-pointer disabled:bg-stone-500  mx-3 p-1.5 bg-stone-700 rounded-2xl px-3 text-white font-semibold "
-          >
-            Add
-          </button>
+          <div className="flex flex-wrap md:flex-row gap-2">
+            <input
+              onChange={handleChange}
+              value={todo}
+              className="bg-white rounded-2xl  md:min-w-[45vw] p-1.5 "
+              type="text"
+              placeholder="Write your task here..."
+            />
+            <button
+              onClick={handleAdd}
+              disabled={todo.length <= 3}
+              className="cursor-pointer disabled:bg-stone-500  mx-3 p-1.5 bg-stone-700 rounded-2xl px-3 text-white font-semibold "
+            >
+              Add
+            </button>
+          </div>
         </div>
 
         {/* for completed todos */}
@@ -133,7 +151,7 @@ function App() {
             onClick={handleResetDay}
             className="my-3 mx-5 px-4 py-1.5 bg-stone-600 text-white font-semibold rounded-2xl hover:bg-stone-700 transition cursor-pointer"
           >
-            Reset 
+            Reset
           </button>
         </div>
 
@@ -141,40 +159,44 @@ function App() {
           My Todos
         </h2>
         {/* rendering all the todos */}
-        <div className="todos flex flex-col w-full">
+        <div className="todos  w-full">
           {/* “If there are NO todos, show this message.” 
         true && <div>...</div>  // React renders the div*/}
           {todos.length === 0 && (
             <div className="m-5 text-white">Add your Todos above</div>
           )}
-          {todos.map((item) => {
+          {todos.map((item, index) => {
             return (
               (showFinished || !item.isCompleted) && (
                 // Each todo needs a unique key so React can track it.
                 // item = { todo: "Study React", isCompleted: false }  // index = 0, 1, 2, ...
 
                 /* 1 single todo card */
-                <div key={item.id} className="todo flex gap-2 my-2 w-full ">
+                <div
+                  key={item.id}
+                  className="todo group flex flex-col md:flex-row items-start md:items-center gap-2 my-2 w-full"
+                >
                   {/* for checkbox for tick and cross */}
-                  <input
-                    type="checkbox"
-                    name={item.id}
-                    onChange={handleCheckbox}
-                    checked={item.isCompleted}
-                    className="w-5 h-auto accent-indigo-600 cursor-pointer"
-                  />
-                  <div
-                    //         {} → means “escape to JavaScript mode”
-                    // You can run JS expressions inside JSX using {}
-                    className={`text w-3/4 bg-stone-200 rounded-xl p-1.5  ${
-                      item.isCompleted ? "line-through" : ""
-                    }`}
-                  >
-                    {/* This inserts the string value */}
-                    {item.todo}
+                  {/* checkbox + todo text */}
+                  <div className="flex items-center gap-2 w-full md:flex-1">
+                    <input
+                      type="checkbox"
+                      name={item.id}
+                      onChange={handleCheckbox}
+                      checked={item.isCompleted}
+                      className="w-5 accent-indigo-600 cursor-pointer"
+                    />
+
+                    <div
+                      className={`bg-stone-200 rounded-xl p-1.5 w-full md:w-auto flex-1 ${
+                        item.isCompleted ? "line-through" : ""
+                      }`}
+                    >
+                      {item.todo}
+                    </div>
                   </div>
 
-                  <div className="buttons gap-2 flex w-1/4 h-full">
+                  <div className="buttons flex gap-2 w-full not-only-of-type:opacity-70 group-hover:opacity-100 md:w-auto md:flex-none  transition">
                     <button
                       onClick={(e) => handleEdit(e, item.id)}
                       className="Edit-button bg-stone-700 w-7 rounded-2xl p-2 text-white cursor-pointer"
@@ -187,6 +209,21 @@ function App() {
                       className="Delete-button bg-stone-700 rounded-2xl p-2 text-white cursor-pointer"
                     >
                       <MdDelete />
+                    </button>
+                    <button
+                      onClick={() => moveTodo(index, -1)}
+                      disabled={index === 0}
+                      className="bg-stone-700 rounded-2xl p-2 text-white cursor-pointer"
+                    >
+                      <FaAngleUp />
+                    </button>
+
+                    <button
+                      onClick={() => moveTodo(index, 1)}
+                      disabled={index === todos.length - 1}
+                      className="bg-stone-700 rounded-2xl p-2 text-white cursor-pointer "
+                    >
+                      <FaAngleDown />
                     </button>
                   </div>
                 </div>
