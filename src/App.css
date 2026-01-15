@@ -2,24 +2,15 @@
 
 @keyframes fall {
   0% {
-    transform: translateY(-10vh) translateX(0) rotate(0deg);
-    opacity: 0.7;
-  }
-  25% {
-    transform: translateY(25vh) translateX(10px) rotate(90deg);
-  }
-  50% {
-    transform: translateY(50vh) translateX(-10px) rotate(180deg);
-    opacity: 0.75;
-  }
-  75% {
-    transform: translateY(75vh) translateX(10px) rotate(270deg);
+    transform: translateY(-10%) rotate(var(--start-rotate));
+    opacity: 1;
   }
   100% {
-    transform: translateY(110vh) translateX(0) rotate(360deg);
-    opacity: 0.7;
+    transform: translateY(110vh) rotate(calc(var(--start-rotate) + 360deg));
+    opacity: 0.3;
   }
 }
+
 
 .leaf {
   position: absolute;

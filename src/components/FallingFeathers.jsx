@@ -8,20 +8,19 @@ function FallingFeathers() {
     // generate 15 random feathers once
     const generated = Array.from({ length: 15 }).map(() => ({
       id: crypto.randomUUID(),
-      left: Math.random() * 100,           // horizontal position
-      delay: Math.random() * 5,            // stagger animation start
-      duration: 5 + Math.random() * 10,    // animation speed
-      size: 40 + Math.random() * 60,       // size in px (40px → 100px)
-      rotate: Math.random() * 360,         // initial rotation
-      drift: -30 + Math.random() * 60      // horizontal movement during fall
-
+      left: Math.random() * 100, // horizontal position
+      delay: Math.random() * 5, // stagger animation start
+      duration: 5 + Math.random() * 10, // animation speed
+      size: 40 + Math.random() * 60, // size in px (40px → 100px)
+      rotate: Math.random() * 360, // initial rotation
+      drift: -30 + Math.random() * 60, // horizontal movement during fall
     }));
     setFeathers(generated);
   }, []); // empty dependency → only runs once
 
   return (
     <div className="leaves-container fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-      {feathers.map(f => (
+      {feathers.map((f) => (
         <img
           key={f.id}
           src={logo}
@@ -32,11 +31,10 @@ function FallingFeathers() {
             left: `${f.left}vw`,
             height: `${f.size}px`,
             width: "auto",
-           transform: `translateX(${f.drift}px) rotate(${f.rotate}deg)`,
-
             animation: `fall ${f.duration}s linear ${f.delay}s infinite`,
-            opacity: 0.1,          // subtle visibility
-    pointerEvents: "none"
+            "--start-rotate": `${f.rotate}deg`, // <-- initial random rotation
+            opacity: 0.1,
+            pointerEvents: "none",
           }}
         />
       ))}

@@ -8,6 +8,8 @@ import { MdDelete } from "react-icons/md";
 import FallingFeathers from "./components/FallingFeathers.jsx";
 import { FaAngleUp } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
 function App() {
   // text
@@ -69,7 +71,10 @@ function App() {
     saveToLS();
   };
   const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
+    setTodos([
+      ...todos,
+      { id: uuidv4(), todo, isCompleted: false, isFav: false },
+    ]);
     setTodo("");
 
     saveToLS();
@@ -86,6 +91,15 @@ function App() {
 
     setTodos([]);
     localStorage.removeItem("todos"); // or set to empty array
+  };
+
+  const isFavourite = (id) => {
+    const newTodos = todos.map((item) =>
+      item.id === id ? { ...item, isFav: !item.isFav } : item
+    );
+    setTodos(newTodos);
+
+    saveToLS();
   };
 
   const handleCheckbox = (e) => {
@@ -106,7 +120,7 @@ function App() {
       <Navbar />
       <FallingFeathers />
       {/* main container for to do app */}
-      <div className="relative z-10 opacity-90 bg-stone-300   rounded-2xl    p-5 my-5  md:max-w-[60vw] md:mx-auto w-full min-h-[80vh]">
+      <div className="relative z-10 opacity-90 bg-stone-300   rounded-2xl p-5 my-5  md:max-w-[60vw] md:mx-auto w-full min-h-[80vh]">
         <div className="flex flex-row justify-center items-center p-2 gap-2">
           <img src={logo} alt="logo" className="h-13 w-auto " />
           <h1 className="md:text-2xl text-xl text-stone-700 font-bold font-serif">
@@ -118,22 +132,28 @@ function App() {
             Add a Todo
           </h2>
           {/* add todo section */}
-          <div className="flex flex-wrap md:flex-row gap-2">
+          <form
+            className="flex items-center"
+            onSubmit={(e) => {
+              e.preventDefault(); // prevent page refresh
+              handleAdd();
+            }}
+          >
             <input
               onChange={handleChange}
               value={todo}
-              className="bg-white rounded-2xl  md:min-w-[45vw] p-1.5 "
+              className="bg-white rounded-2xl px-3 min-w-[45vw] p-1.5"
               type="text"
-              placeholder="Write your task here..."
+              placeholder="Write your todo..."
             />
             <button
-              onClick={handleAdd}
+              type="submit" // important for form submit
               disabled={todo.length <= 3}
-              className="cursor-pointer disabled:bg-stone-500  mx-3 p-1.5 bg-stone-700 rounded-2xl px-3 text-white font-semibold "
+              className="cursor-pointer disabled:bg-stone-500 mx-3 p-1.5 bg-stone-700 rounded-2xl px-3 text-white font-semibold"
             >
               Add
             </button>
-          </div>
+          </form>
         </div>
 
         {/* for completed todos */}
@@ -188,15 +208,25 @@ function App() {
                     />
 
                     <div
-                      className={`bg-stone-200 rounded-xl p-1.5 w-full md:w-auto flex-1 ${
+                      className={`bg-stone-200 rounded-xl p-2 w-full flex items-center justify-between  ${
                         item.isCompleted ? "line-through" : ""
                       }`}
                     >
                       {item.todo}
+                      <button
+                        onClick={() => isFavourite(item.id)}
+                        className="ml-auto"
+                      >
+                        {item.isFav ? (
+                          <FaStar className="text-yellow-600 text-xl transition-transform hover:scale-110" />
+                        ) : (
+                          <FaRegStar className="text-stone-500 text-xl transition-transform hover:scale-110" />
+                        )}
+                      </button>
                     </div>
                   </div>
 
-                  <div className="buttons flex gap-2 w-full not-only-of-type:opacity-70 group-hover:opacity-100 md:w-auto md:flex-none  transition">
+                  <div className="buttons flex gap-2 w-full not-only-of-type:opacity-70 group-hover:opacity-100 md:w-auto md:flex-none justify-end transition">
                     <button
                       onClick={(e) => handleEdit(e, item.id)}
                       className="Edit-button bg-stone-700 w-7 rounded-2xl p-2 text-white cursor-pointer"
@@ -204,7 +234,7 @@ function App() {
                       <FaRegEdit />
                     </button>
                     <button
-                      // (recommended: pass id directly)
+                      // (pass id directly)
                       onClick={() => handleDelete(item.id)}
                       className="Delete-button bg-stone-700 rounded-2xl p-2 text-white cursor-pointer"
                     >
