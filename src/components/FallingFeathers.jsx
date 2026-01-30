@@ -6,7 +6,7 @@ function FallingFeathers() {
 
   useEffect(() => {
     // generate 15 random feathers once
-    const generated = Array.from({ length: 15 }).map(() => ({
+    const generated = Array.from({ length: 25 }).map(() => ({
       id: crypto.randomUUID(),
       left: Math.random() * 100, // horizontal position
       delay: Math.random() * 5, // stagger animation start

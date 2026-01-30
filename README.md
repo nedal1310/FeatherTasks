@@ -1,6 +1,9 @@
 To-do list App -->
 
-git status
-git add .
-git commit -m "Add todo priority feature"
-git push origin main
+step-1 git status
+step-2 git add .
+step-3 commit -m "add a pomodoro and home page"
+step-4 git push origin main
+
+
+

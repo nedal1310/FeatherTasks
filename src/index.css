@@ -2,5 +2,44 @@
 
 body{
    
-    background-color: rgb(252, 249, 249);
+    background-color: white;
+}
+/* PAPER TEXTURE */
+.paper-texture {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.5),
+      rgba(255,255,255,0.5) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+/* FLOATING ANIMATION */
+@keyframes floaty {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-6px) rotate(0.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* CLICK RIPPLE */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-effect 600ms linear;
+  background-color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+@keyframes ripple-effect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
