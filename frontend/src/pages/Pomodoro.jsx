@@ -1,46 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react"; 
 import logo from "../assets/logo.svg";
 import FallingFeathers from "../components/FallingFeathers";
-
-const clickSound = new Audio("/click.wav");
-const alarmSound = new Audio("/alarm.wav");
-const pauseSound = new Audio("/pause.mp3");
-const deleteSound = new Audio("/delete.mp3");
-
-clickSound.preload = "auto";
-alarmSound.preload = "auto";
-pauseSound.preload = "auto";
-deleteSound.preload = "auto";
 
 function Pomodoro() {
   const [totalSeconds, setTotalSeconds] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [mode, setMode] = useState("pomodoro"); // pomodoro, shortBreak, longBreak
+  const [mode, setMode] = useState("pomodoro");
 
-
+  const clickSound = useRef(new Audio("/click.wav"));
+  const alarmSound = useRef(new Audio("/alarm.wav"));
+  const pauseSound = useRef(new Audio("/pause.mp3"));
+  const deleteSound = useRef(new Audio("/delete.mp3"));
 
   const playClick = () => {
-    clickSound.currentTime = 0;
-    clickSound.play().catch(() => {});
+    clickSound.current.currentTime = 0;      
+    clickSound.current.play().catch(() => {});
   };
 
   const playPause = () => {
-    pauseSound.currentTime = 0;
-    pauseSound.play().catch(() => {});
+    pauseSound.current.currentTime = 0;    
+    pauseSound.current.play().catch(() => {});
   };
 
-    const playDelete = () => {
-    deleteSound.currentTime = 0;
-    deleteSound.play().catch(() => {});
+  const playDelete = () => {
+    deleteSound.current.currentTime = 0;    
+    deleteSound.current.play().catch(() => {});
   };
 
   const stopAlarm = () => {
-    alarmSound.pause();
-    alarmSound.currentTime = 0;
+    alarmSound.current.pause();               
+    alarmSound.current.currentTime = 0;
   };
-
 
   useEffect(() => {
     let interval = null;
@@ -53,9 +45,8 @@ function Pomodoro() {
             setIsRunning(false);
             setIsFinished(true);
 
-            //  START ALARM HERE
-             alarmSound.loop = true; 
-             alarmSound.loop.play();
+            alarmSound.current.loop = true; 
+            alarmSound.current.play().catch(() => {});
 
             return 0;
           }
@@ -66,7 +57,6 @@ function Pomodoro() {
 
     return () => clearInterval(interval);
   }, [isRunning]);
-
 
   const handleDismiss = () => {
     stopAlarm();
