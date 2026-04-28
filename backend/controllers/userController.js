@@ -3,33 +3,42 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 
-
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    console.log("Login route hit:", req.body);
 
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ msg: "User not found" });
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Email & password required" });
+    }
 
-  if (!user.password) {
-  return res.status(400).json({
-    msg: "This account was created using Google. Please login with Google.",
-  });
-}
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ msg: "User not found" });
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ msg: "Wrong password" });
+    if (!user.password) {
+      return res.status(400).json({
+        msg: "This account was created using Google. Please login with Google.",
+      });
+    }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-  expiresIn: "7d",
-});
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Wrong password" });
 
-  res.json({
-  token,
-  user: {
-    id: user._id,
-    email: user.email,
-  },
-});
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.error("Login Error:", err);
+    res.status(500).json({ msg: "Login failed" });
+  }
 };
 //for new user to register
 export const registerUser = async (req, res) => {
@@ -44,11 +53,9 @@ export const registerUser = async (req, res) => {
     });
 
     //  create token here also
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.status(201).json({
       token,
@@ -57,7 +64,6 @@ export const registerUser = async (req, res) => {
         email: user.email,
       },
     });
-
   } catch (err) {
     res.status(400).json({ msg: err.message });
   }
@@ -68,40 +74,43 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleAuth = async (req, res) => {
   try {
-    const { token } = req.body;
+   
 
-    // Verify token with Google
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ msg: "No credential received" });
+    }
+
+
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    const { email, name, picture , sub} = payload;
+    const { email, sub } = payload;
 
-    // Check user
     let user = await User.findOne({ email });
 
     if (!user) {
       user = await User.create({
         email,
-       googleId: sub,
+        googleId: sub,
       });
     }
 
-    //  Create YOUR JWT (same as login)
-    const jwtToken = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.json({
-      token: jwtToken,
-      user,
+      token,
+      user: { id: user._id, email: user.email },
     });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: "Google authentication failed" });
+    console.error("GOOGLE ERROR:", err.message);
+    res.status(500).json({ msg: "Google login failed" });
   }
 };

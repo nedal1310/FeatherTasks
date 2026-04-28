@@ -32,9 +32,16 @@ const Login = ({ setToken }) => {
         },
         body: JSON.stringify({ email, password }),
       });
+      const text = await res.text(); 
+      
 
-      const data = await res.json();
-
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error("Not JSON:", text);
+        throw new Error("Server error");
+      }
       if (!res.ok) {
         alert(data.msg || "Login failed");
         setLoading(false);
@@ -136,7 +143,8 @@ const Login = ({ setToken }) => {
               </div>
 
               {/* Login Button */}
-              <button disabled={loading}
+              <button
+                disabled={loading}
                 onClick={handleLogin}
                 className="disabled:opacity-50 disabled:cursor-not-allowed w-full bg-linear-to-r from-amber-600/80 to-orange-600/80 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:cursor-pointer shadow-lg"
               >
@@ -155,14 +163,16 @@ const Login = ({ setToken }) => {
             </div>
 
             {/* Google Login Button */}
-                 <GoogleLogin setToken={setToken} />
-           
+            <GoogleLogin setToken={setToken} />
 
             {/* Sign Up Link */}
             <p className="text-center text-sm text-stone-600 mt-6">
               Don't have an account?{" "}
-              <Link to="/signup"  className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">
-              Sign up
+              <Link
+                to="/signup"
+                className="text-amber-600 font-semibold hover:text-amber-700 transition-colors"
+              >
+                Sign up
               </Link>
             </p>
           </div>

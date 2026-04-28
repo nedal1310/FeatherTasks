@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
@@ -10,24 +10,28 @@ const GoogleLogin = ({ setToken }) => {
 
   useEffect(() => {
     const handleResponse = async (response) => {
+     
+      if (!response.credential) {
+        console.error("❌ No credential received");
+        return;
+      }
+
       try {
         const res = await axios.post(`${API}/api/auth/google`, {
-          token: response.credential,
+          credential: response.credential,
         });
 
         localStorage.setItem("token", res.data.token);
         setToken(res.data.token);
         navigate("/");
       } catch (err) {
-        console.error(err);
+        console.error("BACKEND ERROR:", err);
       }
     };
 
     const loadGoogle = () => {
       if (!window.google || !googleBtnRef.current) return;
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.cancel();
-      }
+
       window.google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleResponse,
@@ -39,8 +43,7 @@ const GoogleLogin = ({ setToken }) => {
       });
     };
 
-    const timeout = setTimeout(loadGoogle, 500);
-    return () => clearTimeout(timeout);
+    setTimeout(loadGoogle, 500);
   }, []);
 
   return <div ref={googleBtnRef}></div>;
