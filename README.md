@@ -1,10 +1,10 @@
 🪶 FeatherTasks
-a cozy little productivity app for people who actually want to get stuff done.
+a cozy little productivity web app for people who actually want to get stuff done.
 
 What is this
 
 FeatherTasks is a full-stack study companion. log your sessions, stay on track with a pomodoro timer, manage your todos, and watch your streak grow day by day. that's it. no noise.
-built with the MERN stack and deployed on Vercel + Render with MongoDB Atlas.
+built with the MERN stack and deployed on Render with MongoDB Atlas.
 
 # Features
 
@@ -30,7 +30,7 @@ JWT-based signup and login. your data is yours, behind a token, not floating aro
 
 
 tech stack
-layertechfrontendReact + VitestylingTailwind CSSbackendNode.js + ExpressdatabaseMongoDB Atlas + MongooseauthJWTdeploymentVercel (frontend) · Render (backend)
+layertechfrontendReact + VitestylingTailwind CSSbackendNode.js + ExpressdatabaseMongoDB Atlas + MongooseauthJWTdeploymentRender (frontend) · Render (backend)
 
 running it locally
 
@@ -73,7 +73,7 @@ VITE_API_URL=http://localhost:5000
 
 deployment
 
-frontend lives on Vercel — just connect your repo and set VITE_API_URL to your Render backend URL
+frontend lives on Render — just connect your repo and set VITE_API_URL to your Render backend URL
 
 backend lives on Render — set the environment variables in the Render dashboard
 
@@ -96,13 +96,13 @@ Project Structure
 - `routes/` — API endpoints
 - `server.js` — entry point
   
-<img width="1893" height="865" alt="image" src="https://github.com/user-attachments/assets/5b27cb6f-3b40-476d-aad4-185f82469023" />
+<img width="1894" height="865" alt="Screenshot 2026-04-27 213317" src="https://github.com/user-attachments/assets/17a4d1a8-e6f4-43b1-b62d-ef8317e995ab" />
+
+<img width="1915" height="865" alt="Screenshot 2026-04-27 213418" src="https://github.com/user-attachments/assets/10058124-7775-44d2-94c8-7c9853d56a5b" />
+
+<img width="1897" height="862" alt="Screenshot 2026-04-27 213600" src="https://github.com/user-attachments/assets/b8883dbf-3208-4647-8fb8-6d970f541788" />
 
 
-<img width="1915" height="865" alt="image" src="https://github.com/user-attachments/assets/75a0ed72-c5ed-4d88-8059-864c7de2b054" />
-
-
-<img width="1897" height="862" alt="image" src="https://github.com/user-attachments/assets/b1b2e44c-943f-4cc9-855e-2ff2bfb97fe3" />
 
 made by
 
