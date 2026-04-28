@@ -11,7 +11,7 @@ import { useState } from "react";
 import FallingFeathers from "./components/FallingFeathers.jsx";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
 
   return (
     <div className="min-h-screen flex flex-col">
