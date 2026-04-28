@@ -8,7 +8,7 @@ const GoogleLogin = ({ setToken }) => {
     const navigate = useNavigate();
   const googleBtnRef = useRef(null);
 
-  useEffect(() => {
+ useEffect(() => {
   const handleResponse = async (response) => {
     try {
       const res = await axios.post(`${API}/api/auth/google`, {
@@ -17,10 +17,7 @@ const GoogleLogin = ({ setToken }) => {
 
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
-
-      console.log("Logged in 🎉");
-
-      navigate("/"); // now works reliably
+      navigate("/");
     } catch (err) {
       console.error(err);
     }
@@ -40,9 +37,7 @@ const GoogleLogin = ({ setToken }) => {
     );
   };
 
-  loadGoogle();
   const timeout = setTimeout(loadGoogle, 500);
-
   return () => clearTimeout(timeout);
 }, []);
 
