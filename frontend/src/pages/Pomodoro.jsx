@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"; 
 import logo from "../assets/logo.svg";
-import FallingFeathers from "../components/FallingFeathers";
 
 function Pomodoro() {
   const [totalSeconds, setTotalSeconds] = useState(25 * 60);

@@ -1,5 +1,3 @@
-// src/Log.jsx
-import Navbar from "../components/Navbar.jsx";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -236,7 +234,7 @@ const Log = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 via-white to-amber-50">
+    <div className="bg-linear-to-br from-amber-50 via-white to-amber-50">
       {/* Hero Section */}
       <div className="relative bg-linear-to-r from-stone-400 via-stone-400 to-stone-400 text-white py-10 px-6 overflow-hidden">
         <div className="absolute inset-0 opacity-20">

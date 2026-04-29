@@ -1,14 +1,12 @@
-import Navbar from "../components/Navbar.jsx";
-import "./Todos.css";
 import { useState, useEffect } from "react";
 import logo from "../assets/logo.svg";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import FallingFeathers from "../components/FallingFeathers";
 import { FaAngleUp } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
+
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -22,22 +20,30 @@ function Todos() {
   const [editId, setEditId] = useState(null);
 
   //display all the todos in ui
-  useEffect(() => {
-    const fetchTodos = async () => {
+useEffect(() => {
+  const fetchTodos = async () => {
+    try {
       const token = localStorage.getItem("token");
+      if (!token) return; // ← don't fetch if no token
 
       const res = await fetch(`${API}/api/todos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = await res.json();
-      setTodos(data);
-    };
+      if (!res.ok) {
+        console.error("Failed to fetch todos:", res.status);
+        return; // ← don't try to setTodos with error object
+      }
 
-    fetchTodos();
-  }, []);
+      const data = await res.json();
+      setTodos(Array.isArray(data) ? data : []); // ← always set an array
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
+
+  fetchTodos();
+}, []);
 
   //for smaller devices
   const toggleFinished = () => {
